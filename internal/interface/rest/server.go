@@ -43,8 +43,8 @@ func NewServer(config Config, packageManger ServicePackageManger) *Server {
 	}
 }
 
-// Start starts the HTTP server
-func (s *Server) Start() error {
+// ListenAndServe starts the HTTP server and listen on specified TCP port.
+func (s *Server) ListenAndServe() error {
 	return s.server.ListenAndServe()
 }
 
