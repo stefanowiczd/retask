@@ -4,15 +4,15 @@ import "context"
 
 //go:generate  mockgen -destination=./mock/service_mock.go -package=mock -source=./service_interface.go
 
-type ServicePackageManger interface {
-	CalculateOptimumPackagesNumber(
+type ServicePacksManger interface {
+	CalculateOptimumPacksAmount(
 		ctx context.Context,
-		smallPackageSize int,
-		mediumPackageSize int,
-		largePackageSize int,
+		smallPackSize int,
+		mediumPackSize int,
+		largePackSize int,
 	) (
-		smallPackageAmount int,
-		mediumPackageAmount int,
-		largePackageAmount int,
+		smallPacksAmount int,
+		mediumPacksAmount int,
+		largePacksAmount int,
 		err error)
 }

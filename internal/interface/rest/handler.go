@@ -9,24 +9,29 @@ import (
 
 var errInvalidValue = errors.New("value must be greater than zero")
 
-// HandlerPackageManager handles HTTP requests for calculating optimal packages usage
-type HandlerPackageManager struct {
-	packageManager ServicePackageManger
+// HandlerPacksManager handles HTTP requests for calculating optimal Packss usage
+type HandlerPacksManager struct {
+	PacksManager ServicePacksManger
 }
 
-func NewHandlerPackageManager(s ServicePackageManger) *HandlerPackageManager {
-	return &HandlerPackageManager{
-		packageManager: s,
+func NewHandlerPacksManager(s ServicePacksManger) *HandlerPacksManager {
+	return &HandlerPacksManager{
+		PacksManager: s,
 	}
 }
 
-type calculatePackagesReq struct {
-	Small  int `json:"small"`
-	Medium int `json:"medium"`
-	Large  int `json:"large"`
+type calculatePacksReq struct {
+	AmountPacks int `json:"amountPacks"`
+	Small       int `json:"small"`
+	Medium      int `json:"medium"`
+	Large       int `json:"large"`
 }
 
-func (r *calculatePackagesReq) validate() error {
+func (r *calculatePacksReq) validate() error {
+	if r.AmountPacks < 0 {
+		return fmt.Errorf("invalid param: amountPacks: %w", errInvalidValue)
+	}
+
 	if r.Small < 0 {
 		return fmt.Errorf("checking param: small: %w", errInvalidValue)
 	}
@@ -42,11 +47,11 @@ func (r *calculatePackagesReq) validate() error {
 	return nil
 }
 
-type calculatePackagesResp struct{}
+type calculatePacksResp struct{}
 
-// calculatePackages calculate optimum number of packages.
-func (h *HandlerPackageManager) calculatePackages(w http.ResponseWriter, r *http.Request) {
-	var req calculatePackagesReq
+// calculatePackss calculate optimum number of Packss.
+func (h *HandlerPacksManager) calculatePacks(w http.ResponseWriter, r *http.Request) {
+	var req calculatePacksReq
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
@@ -57,7 +62,7 @@ func (h *HandlerPackageManager) calculatePackages(w http.ResponseWriter, r *http
 		return
 	}
 
-	_, _, _, err := h.packageManager.CalculateOptimumPackagesNumber(r.Context(), req.Small, req.Medium, req.Large)
+	_, _, _, err := h.PacksManager.CalculateOptimumPacksAmount(r.Context(), req.Small, req.Medium, req.Large)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

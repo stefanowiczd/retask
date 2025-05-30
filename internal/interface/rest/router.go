@@ -4,7 +4,7 @@ import "net/http"
 
 func registerRoutes(
 	r *http.ServeMux,
-	handler *HandlerPackageManager,
+	handler *HandlerPacksManager,
 ) {
-	r.HandleFunc("POST /packages}", handler.calculatePackages)
+	r.HandleFunc("POST /packages}", handler.calculatePacks)
 }

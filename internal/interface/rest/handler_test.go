@@ -19,9 +19,9 @@ import (
 
 func Test_calculatePackages(t *testing.T) {
 	type testCaseParams struct {
-		req                       calculatePackagesReq
-		reqBody                   func(r calculatePackagesReq) io.Reader
-		mockServicePackageManager func(*gomock.Controller) *mock.MockServicePackageManger
+		req                     calculatePacksReq
+		reqBody                 func(r calculatePacksReq) io.Reader
+		mockServicePacksManager func(*gomock.Controller) *mock.MockServicePacksManger
 	}
 
 	type testCaseExpected struct {
@@ -39,11 +39,33 @@ func Test_calculatePackages(t *testing.T) {
 		{
 			name: "invalid request body",
 			params: testCaseParams{
-				reqBody: func(_ calculatePackagesReq) io.Reader {
+				reqBody: func(_ calculatePacksReq) io.Reader {
 					return bytes.NewBuffer([]byte(`{ ... invalid json ... `))
 				},
-				mockServicePackageManager: func(controller *gomock.Controller) *mock.MockServicePackageManger {
-					return mock.NewMockServicePackageManger(controller)
+				mockServicePacksManager: func(controller *gomock.Controller) *mock.MockServicePacksManger {
+					return mock.NewMockServicePacksManger(controller)
+				},
+			},
+			expected: testCaseExpected{
+				statusCode: http.StatusBadRequest,
+				wantError:  true,
+			},
+		},
+		{
+			name: "invalid request body - param amountPacks less than zero",
+			params: testCaseParams{
+				req: calculatePacksReq{
+					AmountPacks: -1,
+					Small:       -1,
+					Medium:      -1,
+					Large:       -1,
+				},
+				reqBody: func(r calculatePacksReq) io.Reader {
+					body, _ := json.Marshal(r)
+					return bytes.NewBuffer(body)
+				},
+				mockServicePacksManager: func(controller *gomock.Controller) *mock.MockServicePacksManger {
+					return mock.NewMockServicePacksManger(controller)
 				},
 			},
 			expected: testCaseExpected{
@@ -54,17 +76,18 @@ func Test_calculatePackages(t *testing.T) {
 		{
 			name: "invalid request body - param small less than zero",
 			params: testCaseParams{
-				req: calculatePackagesReq{
-					Small:  -1,
-					Medium: -1,
-					Large:  -1,
+				req: calculatePacksReq{
+					AmountPacks: 10,
+					Small:       -1,
+					Medium:      -1,
+					Large:       -1,
 				},
-				reqBody: func(r calculatePackagesReq) io.Reader {
+				reqBody: func(r calculatePacksReq) io.Reader {
 					body, _ := json.Marshal(r)
 					return bytes.NewBuffer(body)
 				},
-				mockServicePackageManager: func(controller *gomock.Controller) *mock.MockServicePackageManger {
-					return mock.NewMockServicePackageManger(controller)
+				mockServicePacksManager: func(controller *gomock.Controller) *mock.MockServicePacksManger {
+					return mock.NewMockServicePacksManger(controller)
 				},
 			},
 			expected: testCaseExpected{
@@ -75,17 +98,18 @@ func Test_calculatePackages(t *testing.T) {
 		{
 			name: "invalid request body - param medium less than zero",
 			params: testCaseParams{
-				req: calculatePackagesReq{
-					Small:  10,
-					Medium: -1,
-					Large:  -1,
+				req: calculatePacksReq{
+					AmountPacks: 10,
+					Small:       10,
+					Medium:      -1,
+					Large:       -1,
 				},
-				reqBody: func(r calculatePackagesReq) io.Reader {
+				reqBody: func(r calculatePacksReq) io.Reader {
 					body, _ := json.Marshal(r)
 					return bytes.NewBuffer(body)
 				},
-				mockServicePackageManager: func(controller *gomock.Controller) *mock.MockServicePackageManger {
-					return mock.NewMockServicePackageManger(controller)
+				mockServicePacksManager: func(controller *gomock.Controller) *mock.MockServicePacksManger {
+					return mock.NewMockServicePacksManger(controller)
 				},
 			},
 			expected: testCaseExpected{
@@ -96,17 +120,18 @@ func Test_calculatePackages(t *testing.T) {
 		{
 			name: "invalid request body - param medium large than zero",
 			params: testCaseParams{
-				req: calculatePackagesReq{
-					Small:  10,
-					Medium: 10,
-					Large:  -1,
+				req: calculatePacksReq{
+					AmountPacks: 10,
+					Small:       10,
+					Medium:      10,
+					Large:       -1,
 				},
-				reqBody: func(r calculatePackagesReq) io.Reader {
+				reqBody: func(r calculatePacksReq) io.Reader {
 					body, _ := json.Marshal(r)
 					return bytes.NewBuffer(body)
 				},
-				mockServicePackageManager: func(controller *gomock.Controller) *mock.MockServicePackageManger {
-					return mock.NewMockServicePackageManger(controller)
+				mockServicePacksManager: func(controller *gomock.Controller) *mock.MockServicePacksManger {
+					return mock.NewMockServicePacksManger(controller)
 				},
 			},
 			expected: testCaseExpected{
@@ -117,18 +142,19 @@ func Test_calculatePackages(t *testing.T) {
 		{
 			name: "service package manager returns internal server error",
 			params: testCaseParams{
-				req: calculatePackagesReq{
-					Small:  10,
-					Medium: 10,
-					Large:  10,
+				req: calculatePacksReq{
+					AmountPacks: 10,
+					Small:       10,
+					Medium:      10,
+					Large:       10,
 				},
-				reqBody: func(r calculatePackagesReq) io.Reader {
+				reqBody: func(r calculatePacksReq) io.Reader {
 					body, _ := json.Marshal(r)
 					return bytes.NewBuffer(body)
 				},
-				mockServicePackageManager: func(controller *gomock.Controller) *mock.MockServicePackageManger {
-					m := mock.NewMockServicePackageManger(controller)
-					m.EXPECT().CalculateOptimumPackagesNumber(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(-1, -1, -1, errors.New("internal server error"))
+				mockServicePacksManager: func(controller *gomock.Controller) *mock.MockServicePacksManger {
+					m := mock.NewMockServicePacksManger(controller)
+					m.EXPECT().CalculateOptimumPacksAmount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(-1, -1, -1, errors.New("internal server error"))
 
 					return m
 				},
@@ -141,18 +167,19 @@ func Test_calculatePackages(t *testing.T) {
 		{
 			name: "ok",
 			params: testCaseParams{
-				req: calculatePackagesReq{
-					Small:  10,
-					Medium: 10,
-					Large:  10,
+				req: calculatePacksReq{
+					AmountPacks: 10,
+					Small:       10,
+					Medium:      10,
+					Large:       10,
 				},
-				reqBody: func(r calculatePackagesReq) io.Reader {
+				reqBody: func(r calculatePacksReq) io.Reader {
 					body, _ := json.Marshal(r)
 					return bytes.NewBuffer(body)
 				},
-				mockServicePackageManager: func(controller *gomock.Controller) *mock.MockServicePackageManger {
-					m := mock.NewMockServicePackageManger(controller)
-					m.EXPECT().CalculateOptimumPackagesNumber(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(-1, -1, -1, nil)
+				mockServicePacksManager: func(controller *gomock.Controller) *mock.MockServicePacksManger {
+					m := mock.NewMockServicePacksManger(controller)
+					m.EXPECT().CalculateOptimumPacksAmount(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(-1, -1, -1, nil)
 
 					return m
 				},
@@ -168,12 +195,12 @@ func Test_calculatePackages(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			handler := NewHandlerPackageManager(tt.params.mockServicePackageManager(ctrl))
+			handler := NewHandlerPacksManager(tt.params.mockServicePacksManager(ctrl))
 
 			req := httptest.NewRequest(http.MethodPost, "/packages", tt.params.reqBody(tt.params.req))
 			w := httptest.NewRecorder()
 
-			handler.calculatePackages(w, req)
+			handler.calculatePacks(w, req)
 
 			if tt.expected.wantError {
 				require.Equal(t, tt.expected.statusCode, w.Code)

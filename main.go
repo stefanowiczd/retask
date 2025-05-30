@@ -16,8 +16,8 @@ import (
 
 func main() {
 
-	handlerPackageManager := rest.NewHandlerPackageManager(
-		application.NewServicePackageManager(),
+	handlerPackageManager := rest.NewHandlerPacksManager(
+		application.NewServicePacksManager(),
 	)
 
 	svr := rest.NewServer(

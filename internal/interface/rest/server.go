@@ -11,7 +11,7 @@ import (
 type Server struct {
 	router                *http.ServeMux
 	server                *http.Server
-	handlerPackageManager *HandlerPackageManager
+	handlerPackageManager *HandlerPacksManager
 }
 
 // Config holds the server configuration
@@ -23,7 +23,7 @@ type Config struct {
 }
 
 // NewServer creates a new HTTP server
-func NewServer(config Config, h *HandlerPackageManager) *Server {
+func NewServer(config Config, h *HandlerPacksManager) *Server {
 
 	// Create router
 	r := http.NewServeMux()

@@ -16,34 +16,34 @@ import (
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockServicePackageManger is a mock of ServicePackageManger interface.
-type MockServicePackageManger struct {
+// MockServicePacksManger is a mock of ServicePacksManger interface.
+type MockServicePacksManger struct {
 	ctrl     *gomock.Controller
-	recorder *MockServicePackageMangerMockRecorder
+	recorder *MockServicePacksMangerMockRecorder
 	isgomock struct{}
 }
 
-// MockServicePackageMangerMockRecorder is the mock recorder for MockServicePackageManger.
-type MockServicePackageMangerMockRecorder struct {
-	mock *MockServicePackageManger
+// MockServicePacksMangerMockRecorder is the mock recorder for MockServicePacksManger.
+type MockServicePacksMangerMockRecorder struct {
+	mock *MockServicePacksManger
 }
 
-// NewMockServicePackageManger creates a new mock instance.
-func NewMockServicePackageManger(ctrl *gomock.Controller) *MockServicePackageManger {
-	mock := &MockServicePackageManger{ctrl: ctrl}
-	mock.recorder = &MockServicePackageMangerMockRecorder{mock}
+// NewMockServicePacksManger creates a new mock instance.
+func NewMockServicePacksManger(ctrl *gomock.Controller) *MockServicePacksManger {
+	mock := &MockServicePacksManger{ctrl: ctrl}
+	mock.recorder = &MockServicePacksMangerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockServicePackageManger) EXPECT() *MockServicePackageMangerMockRecorder {
+func (m *MockServicePacksManger) EXPECT() *MockServicePacksMangerMockRecorder {
 	return m.recorder
 }
 
-// CalculateOptimumPackagesNumber mocks base method.
-func (m *MockServicePackageManger) CalculateOptimumPackagesNumber(ctx context.Context, smallPackageSize, mediumPackageSize, largePackageSize int) (int, int, int, error) {
+// CalculateOptimumPacksAmount mocks base method.
+func (m *MockServicePacksManger) CalculateOptimumPacksAmount(ctx context.Context, smallPackSize, mediumPackSize, largePackSize int) (int, int, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CalculateOptimumPackagesNumber", ctx, smallPackageSize, mediumPackageSize, largePackageSize)
+	ret := m.ctrl.Call(m, "CalculateOptimumPacksAmount", ctx, smallPackSize, mediumPackSize, largePackSize)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(int)
@@ -51,8 +51,8 @@ func (m *MockServicePackageManger) CalculateOptimumPackagesNumber(ctx context.Co
 	return ret0, ret1, ret2, ret3
 }
 
-// CalculateOptimumPackagesNumber indicates an expected call of CalculateOptimumPackagesNumber.
-func (mr *MockServicePackageMangerMockRecorder) CalculateOptimumPackagesNumber(ctx, smallPackageSize, mediumPackageSize, largePackageSize any) *gomock.Call {
+// CalculateOptimumPacksAmount indicates an expected call of CalculateOptimumPacksAmount.
+func (mr *MockServicePacksMangerMockRecorder) CalculateOptimumPacksAmount(ctx, smallPackSize, mediumPackSize, largePackSize any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CalculateOptimumPackagesNumber", reflect.TypeOf((*MockServicePackageManger)(nil).CalculateOptimumPackagesNumber), ctx, smallPackageSize, mediumPackageSize, largePackageSize)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CalculateOptimumPacksAmount", reflect.TypeOf((*MockServicePacksManger)(nil).CalculateOptimumPacksAmount), ctx, smallPackSize, mediumPackSize, largePackSize)
 }

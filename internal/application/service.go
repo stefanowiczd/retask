@@ -2,15 +2,15 @@ package application
 
 import "context"
 
-type ServicePackageManager struct{}
+type ServicePacksManager struct{}
 
-func NewServicePackageManager() *ServicePackageManager { return &ServicePackageManager{} }
+func NewServicePacksManager() *ServicePacksManager { return &ServicePacksManager{} }
 
-func (s *ServicePackageManager) CalculateOptimumPackagesNumber(
+func (s *ServicePacksManager) CalculateOptimumPacksAmount(
 	ctx context.Context,
-	smallPackageSize, mediumPackageSize, largePackageSize int,
+	smallPackSize, mediumPackSize, largePackSize int,
 ) (int, int, int, error) {
-	smallPackageAmount, mediumPackageAmount, largePackageAmount := -1, -1, -1
+	smallPacksAmount, mediumPacksAmount, largePacksAmount := -1, -1, -1
 
-	return smallPackageAmount, mediumPackageAmount, largePackageAmount, nil
+	return smallPacksAmount, mediumPacksAmount, largePacksAmount, nil
 }
