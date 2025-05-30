@@ -9,6 +9,17 @@ import (
 
 var errInvalidValue = errors.New("value must be greater than zero")
 
+// HandlerPackageManager handles HTTP requests for calculating optimal packages usage
+type HandlerPackageManager struct {
+	packageManager ServicePackageManger
+}
+
+func NewHandlerPackageManager(s ServicePackageManger) *HandlerPackageManager {
+	return &HandlerPackageManager{
+		packageManager: s,
+	}
+}
+
 type calculatePackagesReq struct {
 	Small  int `json:"small"`
 	Medium int `json:"medium"`
@@ -34,7 +45,7 @@ func (r *calculatePackagesReq) validate() error {
 type calculatePackagesResp struct{}
 
 // calculatePackages calculate optimum number of packages.
-func calculatePackages(w http.ResponseWriter, r *http.Request) {
+func (h *HandlerPackageManager) calculatePackages(w http.ResponseWriter, r *http.Request) {
 	var req calculatePackagesReq
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -46,4 +57,13 @@ func calculatePackages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	_, _, _, err := h.packageManager.CalculateOptimumPackagesNumber(r.Context(), req.Small, req.Medium, req.Large)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	//w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(""))
 }

@@ -9,9 +9,9 @@ import (
 
 // Server represents the HTTP server
 type Server struct {
-	router *http.ServeMux
-	server *http.Server
-	pkgMgr ServicePackageManger
+	router                *http.ServeMux
+	server                *http.Server
+	handlerPackageManager *HandlerPackageManager
 }
 
 // Config holds the server configuration
@@ -23,12 +23,12 @@ type Config struct {
 }
 
 // NewServer creates a new HTTP server
-func NewServer(config Config, packageManger ServicePackageManger) *Server {
+func NewServer(config Config, h *HandlerPackageManager) *Server {
 
 	// Create router
 	r := http.NewServeMux()
 
-	registerRoutes(r)
+	registerRoutes(r, h)
 
 	// Create server
 	srv := &http.Server{
@@ -37,9 +37,9 @@ func NewServer(config Config, packageManger ServicePackageManger) *Server {
 	}
 
 	return &Server{
-		router: r,
-		server: srv,
-		pkgMgr: packageManger,
+		router:                r,
+		server:                srv,
+		handlerPackageManager: h,
 	}
 }
 

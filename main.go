@@ -16,8 +16,14 @@ import (
 
 func main() {
 
-	pkgMgr := application.NewServicePackageManager()
-	svr := rest.NewServer(rest.DefaultConfig(), pkgMgr)
+	handlerPackageManager := rest.NewHandlerPackageManager(
+		application.NewServicePackageManager(),
+	)
+
+	svr := rest.NewServer(
+		rest.DefaultConfig(),
+		handlerPackageManager,
+	)
 
 	run(svr)
 }

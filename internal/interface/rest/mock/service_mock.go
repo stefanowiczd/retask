@@ -10,6 +10,7 @@
 package mock
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
@@ -40,9 +41,9 @@ func (m *MockServicePackageManger) EXPECT() *MockServicePackageMangerMockRecorde
 }
 
 // CalculateOptimumPackagesNumber mocks base method.
-func (m *MockServicePackageManger) CalculateOptimumPackagesNumber(smallPackageSize, mediumPackageSize, largePackageSize int) (int, int, int, error) {
+func (m *MockServicePackageManger) CalculateOptimumPackagesNumber(ctx context.Context, smallPackageSize, mediumPackageSize, largePackageSize int) (int, int, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CalculateOptimumPackagesNumber", smallPackageSize, mediumPackageSize, largePackageSize)
+	ret := m.ctrl.Call(m, "CalculateOptimumPackagesNumber", ctx, smallPackageSize, mediumPackageSize, largePackageSize)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(int)
@@ -51,7 +52,7 @@ func (m *MockServicePackageManger) CalculateOptimumPackagesNumber(smallPackageSi
 }
 
 // CalculateOptimumPackagesNumber indicates an expected call of CalculateOptimumPackagesNumber.
-func (mr *MockServicePackageMangerMockRecorder) CalculateOptimumPackagesNumber(smallPackageSize, mediumPackageSize, largePackageSize any) *gomock.Call {
+func (mr *MockServicePackageMangerMockRecorder) CalculateOptimumPackagesNumber(ctx, smallPackageSize, mediumPackageSize, largePackageSize any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CalculateOptimumPackagesNumber", reflect.TypeOf((*MockServicePackageManger)(nil).CalculateOptimumPackagesNumber), smallPackageSize, mediumPackageSize, largePackageSize)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CalculateOptimumPackagesNumber", reflect.TypeOf((*MockServicePackageManger)(nil).CalculateOptimumPackagesNumber), ctx, smallPackageSize, mediumPackageSize, largePackageSize)
 }
